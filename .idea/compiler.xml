@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="17">
+      <module name="Error_Correcting_Encoder-Decoder.Error_Correcting_Encoder-Decoder-task-build-classes-java.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Error_Correcting_Encoder-Decoder-task-build-generated-sources-annotationProcessor-java.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Error_Correcting_Encoder-Decoder-task-build-generated-sources-headers-java.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Error_Correcting_Encoder-Decoder-task-build-reports-tests.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Error_Correcting_Encoder-Decoder-task-build-test-results.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Error_Correcting_Encoder-Decoder-task-build-tmp.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Error_Correcting_Encoder-Decoder-task.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Exception_handling-Catch_all_exceptions.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Exception_handling-Converting_and_multiplying.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Exception_handling-Determine_a_block_for_handling_exceptions.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Exception_handling-Theory.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Exception_handling-Try-catch_statements.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Files-Are_siblings.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Files-Getting_information.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Files-Theory.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Hierarchy_of_exceptions-BadRequestException.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Hierarchy_of_exceptions-Base_class.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Hierarchy_of_exceptions-Subclasses_of_Exception.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Hierarchy_of_exceptions-Theory.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Hierarchy_of_exceptions-UncheckedException.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Input_streams-Count_words.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Input_streams-FileInputStream_class.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Input_streams-Read_into_an_array.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Input_streams-Theory.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Output_streams-Convert_to_char_array.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Output_streams-FileOutputStream_class.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Output_streams-Theory.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Output_streams-What_is_a_buffering.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Random-Choose_a_correct_invocation.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Random-Gaussian_random_numbers.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Random-Generate_random_numbers.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.Topics-Random-Theory.main" target="11" />
+      <module name="Error_Correcting_Encoder-Decoder.util.main" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

@@ -1,0 +1,22 @@
+type: choice
+is_multiple_choice: true
+options:
+- text: You can't directly write characters using <b>FileOutputStream</b> class
+- text: It always rewrites file content and have no append mode
+- text: It is not an abstract class
+- text: It extends <b>OutputStream</b> class
+files:
+- name: src/Task.java
+  visible: true
+  text: |
+    // You can experiment here, it won’t be checked
+
+    public class Task {
+      public static void main(String[] args) {
+        // put your code here
+      }
+    }
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/8839#comment
+status: Unchecked
+record: -1
