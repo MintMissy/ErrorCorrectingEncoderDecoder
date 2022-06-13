@@ -1,7 +1,6 @@
 package correcter;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,7 +10,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Write a mode: ");
         String mode = scanner.next();
-
 
         switch (mode) {
             case "encode":
@@ -24,15 +22,11 @@ public class Main {
                 decode();
                 break;
         }
-
-//        FileWriter writer = new FileWriter("received.txt");
-//        writer.write(characterAsByte);
-//        writer.close();
     }
 
     private static void encode() throws IOException {
-//        FileReader reader = new FileReader("send.txt");
-        FileReader reader = new FileReader("C:\\Users\\Mint Missy\\IdeaProjects\\Error Correcting Encoder-Decoder\\Error Correcting Encoder-Decoder\\task\\src\\correcter\\send.txt");
+        FileReader reader = new FileReader("send.txt");
+//        FileReader reader = new FileReader("C:\\Users\\Mint Missy\\IdeaProjects\\Error Correcting Encoder-Decoder\\Error Correcting Encoder-Decoder\\task\\src\\correcter\\send.txt");
 
         StringBuilder textView = new StringBuilder();
         StringBuilder hexView = new StringBuilder();
@@ -87,15 +81,16 @@ public class Main {
             bits.add((byte) 1);
         }
 
-        section.append(".").append(".");
+        if (bits.size() == 3) {
+            section.append(".").append(".");
 
-        int number = Integer.parseInt(section.toString().replace(".", ""), 2);
-        String hexCode = addLeadingZerosToHex(Integer.toHexString(number));
-        parityHexView.append(hexCode).append(" ");
+            int number = Integer.parseInt(section.toString().replace(".", ""), 2);
+            String hexCode = addLeadingZerosToHex(Integer.toHexString(number));
+            parityHexView.append(hexCode).append(" ");
 
-        expandView.append(section);
-        parityView.append(section.toString().replace(".", "0"));
-
+            expandView.append(section);
+            parityView.append(section.toString().replace(".", "0"));
+        }
 
         System.out.println("send.txt:");
         System.out.println("text view: " + textView);
@@ -106,6 +101,15 @@ public class Main {
         System.out.println("expand: " + expandView);
         System.out.println("parity: " + parityView);
         System.out.println("hex view: " + parityHexView);
+
+        OutputStream outputStream = new FileOutputStream("encoded.txt");
+//        OutputStream outputStream = new FileOutputStream("C:\\Users\\Mint Missy\\IdeaProjects\\Error Correcting Encoder-Decoder\\Error Correcting Encoder-Decoder\\task\\src\\correcter\\encoded.txt");
+
+        String[] binaryCodes = parityView.toString().split(" ");
+        for (String binaryCode : binaryCodes) {
+            outputStream.write((char) ((byte) Integer.parseInt(binaryCode, 2)));
+        }
+        outputStream.close();
     }
 
     private static void send() {
