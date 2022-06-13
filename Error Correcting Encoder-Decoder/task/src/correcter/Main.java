@@ -41,11 +41,9 @@ public class Main {
             byte characterAsByte = (byte) character;
             String characterAsBinary = addLeadingZerosToBin(Integer.toBinaryString(characterAsByte));
             String characterAsHex = Integer.toHexString(characterAsByte);
-
             textView.append(character);
             hexView.append(characterAsHex).append(" ");
             binView.append(characterAsBinary).append(" ");
-//            characterAsByte ^= 1 << 1;
 
             charAsNumber = reader.read();
         }
@@ -112,12 +110,47 @@ public class Main {
         outputStream.close();
     }
 
-    private static void send() {
+    private static void send() throws IOException {
+        InputStream inputStream = new FileInputStream("encoded.txt");
+//        InputStream inputStream = new FileInputStream("C:\\Users\\Mint Missy\\IdeaProjects\\Error Correcting Encoder-Decoder\\Error Correcting Encoder-Decoder\\task\\src\\correcter\\encoded.txt");
 
+        ArrayList<Character> charsToWrite = new ArrayList<>();
+
+        int charAsNumber = inputStream.read();
+        while (charAsNumber != -1) {
+            char character = (char) ((byte) charAsNumber);
+            byte characterAsByte = (byte) character;
+            System.out.println(characterAsByte);
+            String characterAsBinary = addLeadingZerosToBin(Integer.toBinaryString(characterAsByte));
+            System.out.println(characterAsBinary);
+            String corruptedByte = corruptBinaryByte(characterAsBinary);
+
+//        characterAsByte ^= 1 << 1;
+            charsToWrite.add((char) ((byte) Integer.parseInt(corruptedByte, 2)));
+
+            charAsNumber = inputStream.read();
+        }
+        inputStream.close();
+
+        OutputStream outputStream = new FileOutputStream("received.txt");
+//        OutputStream outputStream = new FileOutputStream("C:\\Users\\Mint Missy\\IdeaProjects\\Error Correcting Encoder-Decoder\\Error Correcting Encoder-Decoder\\task\\src\\correcter\\received.txt");
+        for (Character character : charsToWrite) {
+            outputStream.write(character);
+        }
+        outputStream.close();
     }
+
 
     private static void decode() {
 
+    }
+
+    private static String corruptBinaryByte(String characterAsBinary) {
+        int randomIndex = (int) (Math.random() * characterAsBinary.length());
+        StringBuilder sb = new StringBuilder(characterAsBinary);
+        char newChar = sb.charAt(randomIndex) == '1' ? '0' : '1';
+        sb.setCharAt(randomIndex, newChar);
+        return sb.toString();
     }
 
     private static String addLeadingZerosToBin(String binary) {
@@ -133,7 +166,7 @@ public class Main {
         while (binaryBuilder.length() < wantedStrLength) {
             binaryBuilder.insert(0, "0");
         }
-        str = binaryBuilder.toString();
+        str = binaryBuilder.substring(binaryBuilder.length() - wantedStrLength, binaryBuilder.length());
         return str;
     }
 }
