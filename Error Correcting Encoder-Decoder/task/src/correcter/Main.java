@@ -50,50 +50,39 @@ public class Main {
         reader.close();
 
         String rawBinary = binView.toString().replace(" ", "");
-        StringBuilder section = new StringBuilder();
-        ArrayList<Byte> bits = new ArrayList<>();
+        ArrayList<Character> bits = new ArrayList<>();
 
         for (int i = 0; i < rawBinary.length(); i++) {
             char c = rawBinary.charAt(i);
-            section.append(c).append(c);
 
-            bits.add(Byte.valueOf(Character.toString(c)));
-            if (bits.size() == 3) {
-                int parity = bits.get(0) ^ bits.get(1) ^ bits.get(2);
+            bits.add(c);
+            if (bits.size() == 4) {
+                String bitsParityView = getParityView(bits);
 
-                expandView.append(section).append(".").append(".").append(" ");
-                section.append(parity).append(parity);
-                parityView.append(section).append(" ");
+                expandView.append(getExpandView(bits)).append(" ");
+                parityView.append(bitsParityView).append(" ");
 
-                int number = Integer.parseInt(section.toString(), 2);
+                int number = Integer.parseInt(bitsParityView.replace(".", "0"), 2);
                 String hexCode = addLeadingZerosToHex(Integer.toHexString(number));
                 parityHexView.append(hexCode.toUpperCase()).append(" ");
 
-                section.setLength(0);
                 bits.clear();
             }
         }
 
-        int missingBits = 3 - bits.size();
-        while (bits.size() > 0 && bits.size() < 3) {
-            section.append(".").append(".");
-            bits.add((byte) 1);
+        while (bits.size() > 0 && bits.size() < 4) {
+            bits.add('0');
         }
 
-        if (bits.size() == 3) {
-            int parity = bits.get(0);
-            for (int i = 1; i <= missingBits; i++) {
-                parity ^= bits.get(i);
-            }
+        if (bits.size() == 4) {
+            String bitsParityView = getParityView(bits);
 
-            section.append(parity).append(parity);
+            expandView.append(getExpandView(bits));
+            parityView.append(bitsParityView);
 
-            int number = Integer.parseInt(section.toString().replace(".", ""), 2);
+            int number = Integer.parseInt(bitsParityView.replace(".", "0"), 2);
             String hexCode = addLeadingZerosToHex(Integer.toHexString(number));
-            parityHexView.append(hexCode).append(" ");
-
-            expandView.append(".").append(".");
-            parityView.append(section.toString().replace(".", "0"));
+            parityHexView.append(hexCode.toUpperCase());
         }
 
         System.out.println("send.txt:");
@@ -114,6 +103,59 @@ public class Main {
             outputStream.write((char) ((byte) Integer.parseInt(binaryCode, 2)));
         }
         outputStream.close();
+    }
+
+    private static String getExpandView(ArrayList<Character> bits){
+        StringBuilder sb = new StringBuilder("........");
+        sb.setCharAt(2, bits.get(0));
+        sb.setCharAt(4, bits.get(1));
+        sb.setCharAt(5, bits.get(2));
+        sb.setCharAt(6, bits.get(3));
+        sb.setCharAt(7, '.');
+        return sb.toString();
+    }
+
+    private static String getParityView(ArrayList<Character> bits){
+        StringBuilder parityView = new StringBuilder(getExpandView(bits));
+        parityView.setCharAt(7, '0');
+
+        int amountOfOnesForFirstParity = countOnes(new char[]{
+                parityView.charAt(2),
+                parityView.charAt(4),
+                parityView.charAt(6)
+        });
+
+        int amountOfOnesForSecondParity = countOnes(new char[]{
+                parityView.charAt(2),
+                parityView.charAt(5),
+                parityView.charAt(6)
+        });
+
+        int amountOfOnesForThirdParity = countOnes(new char[]{
+                parityView.charAt(4),
+                parityView.charAt(5),
+                parityView.charAt(6)
+        });
+
+        char firstParityBit = amountOfOnesForFirstParity % 2 == 1 ? '1' : '0';
+        char secondParityBit = amountOfOnesForSecondParity % 2 == 1 ? '1' : '0';
+        char thirdParityBit = amountOfOnesForThirdParity % 2 == 1 ? '1' : '0';
+
+        parityView.setCharAt(0, firstParityBit);
+        parityView.setCharAt(1, secondParityBit);
+        parityView.setCharAt(3, thirdParityBit);
+
+        return parityView.toString();
+    }
+
+    private static int countOnes(char[] bitArray){
+        int counter = 0;
+        for (char bit : bitArray) {
+            if (bit == '1'){
+                counter++;
+            }
+        }
+        return counter;
     }
 
     private static void send() throws IOException {

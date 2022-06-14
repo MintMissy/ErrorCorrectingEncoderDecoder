@@ -1,4 +1,10 @@
-The decoded text must match initial text! Your text may contain extra white spaces
+expand: ..0.101. ..0.100. ..0.110. ..0.101. ..0.111. ..0.011. ..0.111. ..0.100.
+expand: ..0.101. ..0.100. ..0.110. ..0.101. ..0.111. ..0.011. ..0.111. ..0.100.
 
-$ome rand0m messAge
-$ome rand0m messAge
+
+parity: 01001010 10011000 11001100 01001010 00011110 10000110 00011110 10011000
+parity: 01001010 10011000 11001100 01001010 00011110 10000110 00011110 10011000
+
+
+hex view: 4A 98 CC 4A 1E 86 1E 98
+hex view: 4A 98 CC 4A 1E 86 1E 98
