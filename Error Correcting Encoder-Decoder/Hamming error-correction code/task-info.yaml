@@ -348,15 +348,6 @@ files:
   text: "3\x0f3đ\0ĚđĂ\x0f\0\0đđĚĚ˙<ĂĂđ3ĂĂ\0<<đđ<\0Ă\0<Ě\0đĂ\x0fĂĚ<Ăđđ3ĂĂ\0<\x0fĂ˙\x0f\
     \x0fĂĚ<<Ăđ\x0fĚĚ\0\x0f\0\0đ\x0f\x0fđĚ<<Ă˙\x0fĂĂ\x0f"
   learner_created: true
-- name: decoded.txt
-  visible: true
-  text: 5548172 6548 225147 23656595 5155
-  learner_created: true
-- name: encoded.txt
-  visible: true
-  text: "\x0f�3<3���\x0f�\0<\0���\x0f��3\0\0��\x0f�3<3\0�\0\x0f\0\0<\x0f\0�3\x0f�\
-    3<\0���\x0f��3\0\0�3\x0f��<<\0��\x0f��<3��\x0f\x0f�33\0\0��\x0f�3<3���"
-  learner_created: true
 - name: src/correcter/scratch.txt
   visible: true
   text: |
@@ -365,24 +356,19 @@ files:
     $ome rand0m messAge
     $ome rand0m messAge
   learner_created: true
+- name: decoded.txt
+  visible: true
+  learner_created: true
+- name: encoded.txt
+  visible: true
+  learner_created: true
 - name: received.txt
   visible: true
-  text: "\x1f�78sC��\x1fp\x10, ���\x1f�C�\x02\x10��\aLs=#\x04� �\b\x10,/\x01�s��7�\
-    \ ���\x0e��#\x10\x10�\x13\a��,�\b��\a�C8����O�#s\x02\b��\nCs41���"
   learner_created: true
 feedback_link: https://hyperskill.org/learn/step/5458#comment
-status: Failed
+status: Solved
 feedback:
-  message: |-
-    Wrong answer in test #3
-
-    The decoded text must match initial text!
-
-    Please find below the output of your program during this failed test.
-    Note that the &#39;&gt;&#39; character indicates the beginning of the input line.
-
-    ---
-
-    Write a mode: &gt; decode
-  time: Tue, 14 Jun 2022 17:30:28 UTC
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">JetBrains
+    Academy</a> to continue learning.
+  time: Tue, 14 Jun 2022 22:21:50 UTC
 record: -1

@@ -29,6 +29,7 @@ public class Main {
 //        FileReader reader = new FileReader("C:\\Users\\Mint Missy\\IdeaProjects\\Error Correcting Encoder-Decoder\\Error Correcting Encoder-Decoder\\task\\src\\correcter\\send.txt");
 
         StringBuilder textView = new StringBuilder();
+
         StringBuilder hexView = new StringBuilder();
         StringBuilder binView = new StringBuilder();
         StringBuilder expandView = new StringBuilder();
@@ -105,59 +106,6 @@ public class Main {
         outputStream.close();
     }
 
-    private static String getExpandView(ArrayList<Character> bits){
-        StringBuilder sb = new StringBuilder("........");
-        sb.setCharAt(2, bits.get(0));
-        sb.setCharAt(4, bits.get(1));
-        sb.setCharAt(5, bits.get(2));
-        sb.setCharAt(6, bits.get(3));
-        sb.setCharAt(7, '.');
-        return sb.toString();
-    }
-
-    private static String getParityView(ArrayList<Character> bits){
-        StringBuilder parityView = new StringBuilder(getExpandView(bits));
-        parityView.setCharAt(7, '0');
-
-        int amountOfOnesForFirstParity = countOnes(new char[]{
-                parityView.charAt(2),
-                parityView.charAt(4),
-                parityView.charAt(6)
-        });
-
-        int amountOfOnesForSecondParity = countOnes(new char[]{
-                parityView.charAt(2),
-                parityView.charAt(5),
-                parityView.charAt(6)
-        });
-
-        int amountOfOnesForThirdParity = countOnes(new char[]{
-                parityView.charAt(4),
-                parityView.charAt(5),
-                parityView.charAt(6)
-        });
-
-        char firstParityBit = amountOfOnesForFirstParity % 2 == 1 ? '1' : '0';
-        char secondParityBit = amountOfOnesForSecondParity % 2 == 1 ? '1' : '0';
-        char thirdParityBit = amountOfOnesForThirdParity % 2 == 1 ? '1' : '0';
-
-        parityView.setCharAt(0, firstParityBit);
-        parityView.setCharAt(1, secondParityBit);
-        parityView.setCharAt(3, thirdParityBit);
-
-        return parityView.toString();
-    }
-
-    private static int countOnes(char[] bitArray){
-        int counter = 0;
-        for (char bit : bitArray) {
-            if (bit == '1'){
-                counter++;
-            }
-        }
-        return counter;
-    }
-
     private static void send() throws IOException {
         InputStream inputStream = new FileInputStream("encoded.txt");
 //        InputStream inputStream = new FileInputStream("C:\\Users\\Mint Missy\\IdeaProjects\\Error Correcting Encoder-Decoder\\Error Correcting Encoder-Decoder\\task\\src\\correcter\\encoded.txt");
@@ -198,25 +146,16 @@ public class Main {
             byte characterAsByte = (byte) character;
             String characterAsBinary = addLeadingZerosToBin(Integer.toBinaryString(characterAsByte));
 
-            ArrayList<Integer> pairs = new ArrayList<>();
-            int corruptedPairIndex = 0;
+            int corruptedBitIndex = getCorruptedBitIndex(characterAsBinary);
 
-            for (int i = 0; i < characterAsBinary.length(); i += 2) {
-                if (characterAsBinary.charAt(i) == characterAsBinary.charAt(i + 1)) {
-                    pairs.add(Integer.parseInt(String.valueOf(characterAsBinary.charAt(i))));
-                } else {
-                    corruptedPairIndex = i / 2;
-                    pairs.add(0);
-                }
-            }
+            // Fix corrupted character
+            StringBuilder fixedCharacterAsBinary = new StringBuilder(characterAsBinary);
+            fixedCharacterAsBinary.setCharAt(corruptedBitIndex, fixedCharacterAsBinary.charAt(corruptedBitIndex) == '1' ? '0' : '1');
 
-            if ((pairs.get(0) ^ pairs.get(1) ^ pairs.get(2)) != pairs.get(3)) {
-                pairs.set(corruptedPairIndex, 1);
-            }
-
-            decodedBinaryString.append(pairs.get(0));
-            decodedBinaryString.append(pairs.get(1));
-            decodedBinaryString.append(pairs.get(2));
+            decodedBinaryString.append(fixedCharacterAsBinary.charAt(2));
+            decodedBinaryString.append(fixedCharacterAsBinary.charAt(4));
+            decodedBinaryString.append(fixedCharacterAsBinary.charAt(5));
+            decodedBinaryString.append(fixedCharacterAsBinary.charAt(6));
 
             charAsNumber = inputStream.read();
         }
@@ -227,7 +166,7 @@ public class Main {
             String binaryByte = decodedBinaryString.substring(i, endIndex);
             binaryByte = addLeadingZerosToBin(binaryByte);
 
-            if (binaryByte.equals("00000000") && endIndex == decodedBinaryString.length()){
+            if (binaryByte.equals("00000000") && endIndex == decodedBinaryString.length()) {
                 break;
             }
 
@@ -236,11 +175,109 @@ public class Main {
             charactersToWrite.add(decodedChar);
         }
 
+        System.out.println(charactersToWrite.toString());
         OutputStream outputStream = new FileOutputStream("decoded.txt");
         for (Character character : charactersToWrite) {
             outputStream.write(character);
         }
         outputStream.close();
+    }
+
+    private static int getCorruptedBitIndex(String bits) {
+        if (bits.charAt(7) == '1') {
+            return 7;
+        }
+
+        int correctFirstParity = countOnes(new char[]{
+                bits.charAt(2),
+                bits.charAt(4),
+                bits.charAt(6)
+        });
+
+        int correctSecondParity = countOnes(new char[]{
+                bits.charAt(2),
+                bits.charAt(5),
+                bits.charAt(6)
+        });
+
+        int correctThirdParity = countOnes(new char[]{
+                bits.charAt(4),
+                bits.charAt(5),
+                bits.charAt(6)
+        });
+
+        boolean isFirstParityCorrect = bits.charAt(0) == (correctFirstParity % 2 == 1 ? '1' : '0');
+        boolean isSecondParityCorrect = bits.charAt(1) == (correctSecondParity % 2 == 1 ? '1' : '0');
+        boolean isThirdParityCorrect = bits.charAt(3) == (correctThirdParity % 2 == 1 ? '1' : '0');
+
+        if (!isFirstParityCorrect && isSecondParityCorrect && isThirdParityCorrect) {
+            return 0;
+        } else if (isFirstParityCorrect && !isSecondParityCorrect && isThirdParityCorrect) {
+            return 1;
+        } else if (!isFirstParityCorrect && !isSecondParityCorrect && isThirdParityCorrect) {
+            return 2;
+        } else if (isFirstParityCorrect && isSecondParityCorrect && !isThirdParityCorrect) {
+            return 3;
+        } else if (!isFirstParityCorrect && isSecondParityCorrect && !isThirdParityCorrect) {
+            return 4;
+        } else if (isFirstParityCorrect && !isSecondParityCorrect && !isThirdParityCorrect) {
+            return 5;
+        } else {
+            return 6;
+        }
+    }
+
+    private static int countOnes(char[] bitArray) {
+        int counter = 0;
+        for (char bit : bitArray) {
+            if (bit == '1') {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
+    private static String getExpandView(ArrayList<Character> bits) {
+        StringBuilder sb = new StringBuilder("........");
+        sb.setCharAt(2, bits.get(0));
+        sb.setCharAt(4, bits.get(1));
+        sb.setCharAt(5, bits.get(2));
+        sb.setCharAt(6, bits.get(3));
+        sb.setCharAt(7, '.');
+        return sb.toString();
+    }
+
+    private static String getParityView(ArrayList<Character> bits) {
+        StringBuilder parityView = new StringBuilder(getExpandView(bits));
+        parityView.setCharAt(7, '0');
+
+        int amountOfOnesForFirstParity = countOnes(new char[]{
+                parityView.charAt(2),
+                parityView.charAt(4),
+                parityView.charAt(6)
+        });
+
+        int amountOfOnesForSecondParity = countOnes(new char[]{
+                parityView.charAt(2),
+                parityView.charAt(5),
+                parityView.charAt(6)
+        });
+
+        int amountOfOnesForThirdParity = countOnes(new char[]{
+                parityView.charAt(4),
+                parityView.charAt(5),
+                parityView.charAt(6)
+        });
+
+        char firstParityBit = amountOfOnesForFirstParity % 2 == 1 ? '1' : '0';
+        char secondParityBit = amountOfOnesForSecondParity % 2 == 1 ? '1' : '0';
+        char thirdParityBit = amountOfOnesForThirdParity % 2 == 1 ? '1' : '0';
+
+        parityView.setCharAt(0, firstParityBit);
+        parityView.setCharAt(1, secondParityBit);
+        parityView.setCharAt(3, thirdParityBit);
+
+        return parityView.toString();
     }
 
     private static String corruptBinaryByte(String characterAsBinary) {
