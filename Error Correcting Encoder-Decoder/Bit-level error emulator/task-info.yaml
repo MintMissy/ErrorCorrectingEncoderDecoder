@@ -163,6 +163,12 @@ files:
         }
     }
   learner_created: false
-feedback_link: https://hyperskill.org/projects/58/stages/314/implement#comment
-status: Unchecked
-record: -1
+- name: received.txt
+  visible: true
+  learner_created: true
+feedback_link: https://hyperskill.org/learn/step/5456#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Mon, 13 Jun 2022 17:23:54 UTC
+record: 3

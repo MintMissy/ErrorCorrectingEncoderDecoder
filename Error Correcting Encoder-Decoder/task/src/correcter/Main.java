@@ -74,19 +74,25 @@ public class Main {
             }
         }
 
+        int missingBits = 3 - bits.size();
         while (bits.size() > 0 && bits.size() < 3) {
             section.append(".").append(".");
             bits.add((byte) 1);
         }
 
         if (bits.size() == 3) {
-            section.append(".").append(".");
+            int parity = bits.get(0);
+            for (int i = 1; i <= missingBits; i++) {
+                parity ^= bits.get(i);
+            }
+
+            section.append(parity).append(parity);
 
             int number = Integer.parseInt(section.toString().replace(".", ""), 2);
             String hexCode = addLeadingZerosToHex(Integer.toHexString(number));
             parityHexView.append(hexCode).append(" ");
 
-            expandView.append(section);
+            expandView.append(".").append(".");
             parityView.append(section.toString().replace(".", "0"));
         }
 
@@ -120,9 +126,7 @@ public class Main {
         while (charAsNumber != -1) {
             char character = (char) ((byte) charAsNumber);
             byte characterAsByte = (byte) character;
-            System.out.println(characterAsByte);
             String characterAsBinary = addLeadingZerosToBin(Integer.toBinaryString(characterAsByte));
-            System.out.println(characterAsBinary);
             String corruptedByte = corruptBinaryByte(characterAsBinary);
 
 //        characterAsByte ^= 1 << 1;
@@ -140,9 +144,61 @@ public class Main {
         outputStream.close();
     }
 
+    private static void decode() throws IOException {
+        InputStream inputStream = new FileInputStream("received.txt");
 
-    private static void decode() {
+        ArrayList<Character> charactersToWrite = new ArrayList<>();
+        StringBuilder decodedBinaryString = new StringBuilder();
 
+        int charAsNumber = inputStream.read();
+        while (charAsNumber != -1) {
+            char character = (char) ((byte) charAsNumber);
+            byte characterAsByte = (byte) character;
+            String characterAsBinary = addLeadingZerosToBin(Integer.toBinaryString(characterAsByte));
+
+            ArrayList<Integer> pairs = new ArrayList<>();
+            int corruptedPairIndex = 0;
+
+            for (int i = 0; i < characterAsBinary.length(); i += 2) {
+                if (characterAsBinary.charAt(i) == characterAsBinary.charAt(i + 1)) {
+                    pairs.add(Integer.parseInt(String.valueOf(characterAsBinary.charAt(i))));
+                } else {
+                    corruptedPairIndex = i / 2;
+                    pairs.add(0);
+                }
+            }
+
+            if ((pairs.get(0) ^ pairs.get(1) ^ pairs.get(2)) != pairs.get(3)) {
+                pairs.set(corruptedPairIndex, 1);
+            }
+
+            decodedBinaryString.append(pairs.get(0));
+            decodedBinaryString.append(pairs.get(1));
+            decodedBinaryString.append(pairs.get(2));
+
+            charAsNumber = inputStream.read();
+        }
+        inputStream.close();
+
+        for (int i = 0; i < decodedBinaryString.length(); i += 8) {
+            int endIndex = Math.min(i + 8, decodedBinaryString.length());
+            String binaryByte = decodedBinaryString.substring(i, endIndex);
+            binaryByte = addLeadingZerosToBin(binaryByte);
+
+            if (binaryByte.equals("00000000") && endIndex == decodedBinaryString.length()){
+                break;
+            }
+
+            byte decodedCharAsNumber = (byte) (Integer.parseInt(binaryByte, 2));
+            char decodedChar = (char) decodedCharAsNumber;
+            charactersToWrite.add(decodedChar);
+        }
+
+        OutputStream outputStream = new FileOutputStream("decoded.txt");
+        for (Character character : charactersToWrite) {
+            outputStream.write(character);
+        }
+        outputStream.close();
     }
 
     private static String corruptBinaryByte(String characterAsBinary) {

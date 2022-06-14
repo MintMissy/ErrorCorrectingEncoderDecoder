@@ -1,0 +1,4 @@
+The decoded text must match initial text! Your text may contain extra white spaces
+
+$ome rand0m messAge
+$ome rand0m messAge
